@@ -1,0 +1,9 @@
+use DB
+
+CREATE TABLE [dbo].[Shortened_URL]
+(
+ID INT IDENTITY PRIMARY KEY,
+long_URL VARCHAR(2083) NOT NULL UNIQUE,
+short_URL VARCHAR(18) NOT NULL UNIQUE,
+amount_of_use INT
+)
