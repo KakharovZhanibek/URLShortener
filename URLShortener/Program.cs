@@ -47,22 +47,24 @@ namespace URLShortener
                 }
             }
 
-            string insertInfo = $"INSERT INTO [dbo].[Shortened_URL](long_URL,short_URL,amount_of_use)" +
-                $"VALUES('{URL}','{short_URL}',{amount_of_use})";
-
             try
             {
-
                 using (SqlConnection connection = new SqlConnection(connectionString))
                 {
                     connection.Open();
+
+                    string insertInfo = $"INSERT INTO [dbo].[Shortened_URL](long_URL,short_URL,amount_of_use)" +
+                                        $"VALUES('{URL}','{short_URL}',{amount_of_use})";
+
                     SqlCommand command = new SqlCommand(insertInfo, connection);
                     command.ExecuteNonQuery();
                 }
             }
             catch (Exception ex)
             {
+                Console.ForegroundColor = ConsoleColor.Red;
                 Console.WriteLine(ex.Message);
+                Console.ForegroundColor = ConsoleColor.Gray;
             }
             return short_URL;
         }
@@ -78,11 +80,11 @@ namespace URLShortener
                     connection.Open();
 
                     string rowIsExistsSQL = $"SELECT DISTINCT * FROM [dbo].[Shortened_URL] WHERE short_URL='{short_URL}'";
-                   
+
                     SqlCommand command = new SqlCommand(rowIsExistsSQL, connection);
                     SqlDataReader reader = command.ExecuteReader();
 
-                    if (reader.HasRows!=true)
+                    if (reader.HasRows != true)
                     {
                         Console.WriteLine("Такого укороченного URL не существует!");
                         Console.WriteLine("\nНажмите любую клавишу...");
@@ -93,6 +95,7 @@ namespace URLShortener
                     {
                         string getAmount_Of_UseSQL = $"SELECT amount_of_use FROM [dbo].[Shortened_URL] WHERE short_URL='{short_URL}'";
                         reader.Close();
+
                         command = new SqlCommand(getAmount_Of_UseSQL, connection);
                         object amount_of_use = command.ExecuteScalar();
 
@@ -106,7 +109,9 @@ namespace URLShortener
             }
             catch (Exception ex)
             {
+                Console.ForegroundColor = ConsoleColor.Red;
                 Console.WriteLine(ex.Message);
+                Console.ForegroundColor = ConsoleColor.Gray;
             }
         }
         public static int GetPunctMenu()
@@ -127,7 +132,7 @@ namespace URLShortener
                     case 1:
                         {
                             Console.Clear();
-                            Console.WriteLine("Ваша укороченная ссылка: {0}", Shortener());
+                            Console.WriteLine("Результат: {0}", Shortener());
                             Console.WriteLine("\nНажмите любую клавишу...");
                             Console.ReadKey();
                             Console.Clear();
